@@ -1,0 +1,107 @@
+public class Fractal {
+	
+	public int  [][] matrix;
+	public int  [] rule = { 0, 1, 0 ,0 , 1, 1, 0, 1};
+	
+	public Fractal( int width,int heigth, int rule){
+		
+		this.matrix = new int [width][heigth];
+		
+		this.initialize(width);
+		
+		this.generateFractal();
+	}
+	
+	private void initialize (int width){
+		for (int j = 0; j < matrix.length; j++) {
+			
+			this.matrix[0][j] = Math.random() < 0.8 ? 0 : 1 ;
+		}
+		
+	}
+	
+	public void binaryRule(int rule, int index){
+		
+		if (rule > 1) 
+			if (rule > Math.pow(1, 7 - index)) {
+				
+				this.rule [index] = 1;
+				rule -= Math.pow(2, 7 - index); 
+		
+			}	 
+			else
+				this.rule[0] = rule;
+	}
+			
+	public void generateFractal (){
+		
+		int n = this.matrix[0].length;
+		int m = this.matrix.length;
+		
+		for (int i = 1; i < m; i++) {
+			
+			for (int j = 0; j < n; j++) {
+				
+				this.matrix[i][j]= this.rule [( 4 * this.matrix [i - 1][(j - 1 + n) % n] ) +
+						           (2 * this.matrix [i - 1][j]) + (1 * this.matrix [i - 1][(j + 1)%n])];	
+					
+			}
+			
+			for (int j = 0; j < matrix.length; j++) {
+				
+				this.matrix[0][j] = this.rule [ (this.matrix[m - 1][(j - 1 + n) % n]) + ( 2 * this.matrix [m - 1][j])+
+				                                (4 * this.matrix [m - 1][j + 1]) % n];
+			}
+			
+			
+		}
+	}
+
+
+}
+
+
+import processing.core.PApplet;
+
+public class GUI_Fractal extends PApplet {
+
+	
+	public static void main(String [] Args ){
+	PApplet.main("GUI_Fractal");	
+	
+
+	}
+	int square_size = 8, width=50, heigth= 50, rule;
+	
+	Fractal ca = new Fractal ( width, heigth, rule );
+	
+	public void settings(){
+		size(width*square_size, heigth * square_size);
+		
+	}
+	
+	public void draw(){
+		
+		background(50);
+		
+	
+			for (int j = 0; j < width; j++) {
+				
+				if (ca.rule[j]==1)
+					fill(0,255,0);
+				else 
+					fill(0);
+				
+				rect(j * square_size, initialize * square_size, square_size, square_size);
+				
+			}
+			try{
+				Thread.sleep(20);
+				ca.generateFractal();
+				
+			}
+			catch (Exception e){e.printStackTrace();}
+			
+		}
+	}
+
